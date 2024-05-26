@@ -34,14 +34,14 @@ interface ApiService {
         @Query("date") date: String
     ): Call<List<Task>>
 
-    @GET("/chat/{receiverId}")
+    @GET("chat/{receiverId}")
     fun getChatMessages(@Path("receiverId") receiverId: Long): Call<List<Message>>
 
-    @GET("users/{userId}")
+    @GET("api/users/{userId}")
     fun getUserDetails(@Path("userId") userId: Long): Call<User>
 
     @FormUrlEncoded
-    @POST("/sendMessage")
+    @POST("sendMessage")
     fun sendMessage(
         @Field("receiverId") receiverId: Long,
         @Field("senderId") senderId: Long,

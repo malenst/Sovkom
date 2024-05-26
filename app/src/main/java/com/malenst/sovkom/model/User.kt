@@ -10,7 +10,7 @@ data class User(
     val role: String,
     val email: String,
     val phone: String?,
-    @SerializedName("coordinator_id")
+    @SerializedName("coordinatorId")
     val coordinatorId: Long?,
     @SerializedName("start_coordinates")
     val startCoordinates: String?,

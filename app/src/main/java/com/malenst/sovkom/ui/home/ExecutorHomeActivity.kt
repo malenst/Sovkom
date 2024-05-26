@@ -14,11 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.malenst.sovkom.R
 import com.malenst.sovkom.RetrofitBuilder
+import com.malenst.sovkom.api.ApiClient
 import com.malenst.sovkom.databinding.ActivityExecutorHomeBinding
 import com.malenst.sovkom.model.Task
+import com.malenst.sovkom.model.User
 import com.malenst.sovkom.ui.chat.ChatActivity
 import com.malenst.sovkom.ui.login.ViewModelFactory
 import com.malenst.sovkom.ui.task.TasksAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.Calendar
@@ -54,12 +59,57 @@ class ExecutorHomeActivity : AppCompatActivity() {
         viewModel.tasks.observe(this, Observer { tasks ->
             tasksAdapter.updateTasks(tasks ?: emptyList())
         })
+        setupViews()
+        observeViewModel()
+    }
+
+    private fun setupViews() {
+        findViewById<ImageView>(R.id.icon_chat).setOnClickListener {
+            fetchCoordinatorIdAndStartChat(userId)
+        }
+
+        setupRecyclerView()
+        setupDateSelection()
+        updateTasksForSelectedDate()
+    }
+
+    private fun observeViewModel() {
+        viewModel.tasks.observe(this, Observer { tasks ->
+            tasksAdapter.updateTasks(tasks ?: emptyList())
+        })
     }
 
     fun navigateToChat(receiverId: Long) {
         val intent = Intent(this, ChatActivity::class.java).apply {
             putExtra("RECEIVER_ID", receiverId)
         }
+        startActivity(intent)
+    }
+
+    private fun fetchCoordinatorIdAndStartChat(userId: Long) {
+        ApiClient.instance.getUserDetails(userId).enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.isSuccessful) {
+                    val coordinatorId = response.body()?.coordinatorId ?: -1
+                    if (coordinatorId != -1L) {
+                        openChatActivity(coordinatorId)
+                    } else {
+                        Toast.makeText(this@ExecutorHomeActivity, "Не удалось получить ID координатора", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@ExecutorHomeActivity, "Ошибка при загрузке данных", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Toast.makeText(this@ExecutorHomeActivity, "Ошибка сети: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun openChatActivity(coordinatorId: Long) {
+        val intent = Intent(this, ChatActivity::class.java)
+        intent.putExtra("RECEIVER_ID", coordinatorId)
         startActivity(intent)
     }
 
