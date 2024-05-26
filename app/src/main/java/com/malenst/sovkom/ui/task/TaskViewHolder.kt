@@ -1,5 +1,6 @@
 package com.malenst.sovkom.ui.task
 
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,9 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,7 +25,20 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(task: Task) {
         tvTaskDescription.text = task.description
-        tvTaskTime.text = "${task.startTime} - ${task.endTime}"
+
+        // Форматирование времени
+        try {
+            val parsedStartTime = inputFormatter.parse(task.startTime) ?: throw IllegalArgumentException("Invalid start time")
+            val parsedEndTime = inputFormatter.parse(task.endTime) ?: throw IllegalArgumentException("Invalid end time")
+
+            val formattedStartTime = outputFormatter.format(parsedStartTime)
+            val formattedEndTime = outputFormatter.format(parsedEndTime)
+
+            tvTaskTime.text = "$formattedStartTime - $formattedEndTime"
+        } catch (e: Exception) {
+            tvTaskTime.text = "Time format error"
+            Log.e("TaskViewHolder", "Error formatting time", e)
+        }
 
         // Асинхронный запуск для получения адреса
         Thread {

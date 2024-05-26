@@ -1,0 +1,17 @@
+<!-- item_message_outgoing.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="end">
+
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_message_outgoing"
+        android:textColor="#FFFFFF"
+        android:padding="10dp"
+        android:text="Sample message"/>
+</LinearLayout>

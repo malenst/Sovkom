@@ -8,6 +8,8 @@ import com.malenst.sovkom.model.User
 import retrofit2.Response
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -32,6 +34,18 @@ interface ApiService {
         @Query("date") date: String
     ): Call<List<Task>>
 
+    @GET("/chat/{receiverId}")
+    fun getChatMessages(@Path("receiverId") receiverId: Long): Call<List<Message>>
 
+    @GET("users/{userId}")
+    fun getUserDetails(@Path("userId") userId: Long): Call<User>
+
+    @FormUrlEncoded
+    @POST("/sendMessage")
+    fun sendMessage(
+        @Field("receiverId") receiverId: Long,
+        @Field("senderId") senderId: Long,
+        @Field("message") message: String
+    ): Call<String>
 
 }

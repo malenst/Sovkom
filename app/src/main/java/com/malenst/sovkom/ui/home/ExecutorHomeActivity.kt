@@ -1,8 +1,11 @@
 package com.malenst.sovkom.ui.home
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.lifecycle.Observer
@@ -13,6 +16,7 @@ import com.malenst.sovkom.R
 import com.malenst.sovkom.RetrofitBuilder
 import com.malenst.sovkom.databinding.ActivityExecutorHomeBinding
 import com.malenst.sovkom.model.Task
+import com.malenst.sovkom.ui.chat.ChatActivity
 import com.malenst.sovkom.ui.login.ViewModelFactory
 import com.malenst.sovkom.ui.task.TasksAdapter
 import java.text.SimpleDateFormat
@@ -35,7 +39,7 @@ class ExecutorHomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_executor_home)
-
+        val chatButton: ImageView = findViewById(R.id.icon_chat)
         userId = intent.getLongExtra("USER_ID", -1)
         if (userId == -1L) {
             Toast.makeText(this, "Ошибка: ID пользователя не найден.", Toast.LENGTH_SHORT).show()
@@ -50,6 +54,13 @@ class ExecutorHomeActivity : AppCompatActivity() {
         viewModel.tasks.observe(this, Observer { tasks ->
             tasksAdapter.updateTasks(tasks ?: emptyList())
         })
+    }
+
+    fun navigateToChat(receiverId: Long) {
+        val intent = Intent(this, ChatActivity::class.java).apply {
+            putExtra("RECEIVER_ID", receiverId)
+        }
+        startActivity(intent)
     }
 
     private fun setupRecyclerView() {
