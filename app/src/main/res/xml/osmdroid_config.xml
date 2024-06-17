@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preferences xmlns:android="http://schemas.android.com/apk/res/android">
+    <preference android:key="osmdroid_tile_cache" android:value="osmdroid/tiles"/>
+</preferences>

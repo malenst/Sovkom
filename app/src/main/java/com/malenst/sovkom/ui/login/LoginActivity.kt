@@ -56,7 +56,9 @@ class LoginActivity : AppCompatActivity() {
             "EXECUTOR" -> Intent(this, ExecutorHomeActivity::class.java).apply {
                 putExtra("USER_ID", userId)
             }
-            "COORDINATOR" -> Intent(this, CoordinatorHomeActivity::class.java)
+            "COORDINATOR" -> Intent(this, CoordinatorHomeActivity::class.java).apply {
+                putExtra("USER_ID", userId)
+            }
             else -> null
         }
         intent?.let {

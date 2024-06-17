@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.map.TaskWithMapActivity">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_open_navigator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Открыть в навигаторе"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:padding="8dp" />
+
+        <FrameLayout
+            android:id="@+id/bottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            android:background="@drawable/bottom_sheet_background">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/taskTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/taskDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="16sp"
+                    android:padding="4dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/taskTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:padding="4dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/taskDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="16sp"
+                    android:padding="4dp"
+                    android:textColor="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/taskAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Address"
+                    android:textSize="16sp"
+                    android:padding="4dp"
+                    android:textColor="@android:color/black" />
+
+                <LinearLayout
+                    android:id="@+id/pdfContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackground">
+
+                    <ImageView
+                        android:id="@+id/pdfIcon"
+                        android:layout_width="48dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/pdf"
+                        android:contentDescription="PDF Icon"
+                        android:paddingEnd="4dp" />
+
+                    <TextView
+                        android:id="@+id/pdfText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Документ"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

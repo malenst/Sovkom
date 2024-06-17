@@ -8,8 +8,8 @@ data class Task(
     val departureCoordinates: String?,
     val destinationCoordinates: String,
     val status: String,
-    val assignmentDate: String,  // Используйте String для упрощения, предполагая что используется ISO формат
-    val startTime: String,       // То же
+    val assignmentDate: String,
+    val startTime: String,
     val endTime: String,
     val coordinatorId: Long?,
     val executorId: Long?,

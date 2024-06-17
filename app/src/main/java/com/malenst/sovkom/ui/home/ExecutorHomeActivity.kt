@@ -19,6 +19,7 @@ import com.malenst.sovkom.databinding.ActivityExecutorHomeBinding
 import com.malenst.sovkom.model.Task
 import com.malenst.sovkom.model.User
 import com.malenst.sovkom.ui.chat.ChatActivity
+import com.malenst.sovkom.ui.chat.ChatAdapter
 import com.malenst.sovkom.ui.login.ViewModelFactory
 import com.malenst.sovkom.ui.task.TasksAdapter
 import retrofit2.Call
@@ -36,54 +37,46 @@ class ExecutorHomeActivity : AppCompatActivity() {
     private lateinit var tasksAdapter: TasksAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var weekDaysContainer: LinearLayout
-    private var selectedDate: Date = Date()  // Сегодняшняя дата изначально выбрана
+    private var selectedDate: Date = Date()
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    val formattedDate = formatter.format(selectedDate)
     private var userId: Long = -1 // ID пользователя
+    private var authorizedId: Long = -1 // Эмуляция авторизации с ID 3
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_executor_home)
-        val chatButton: ImageView = findViewById(R.id.icon_chat)
-        userId = intent.getLongExtra("USER_ID", -1)
-        if (userId == -1L) {
+
+        userId = intent.getLongExtra("USER_ID", -1L)
+        authorizedId = intent.getLongExtra("AUTHORIZED_ID", -1L)
+        ChatAdapter.myUserId = authorizedId
+        if (userId == -1L || authorizedId == -1L) {
             Toast.makeText(this, "Ошибка: ID пользователя не найден.", Toast.LENGTH_SHORT).show()
             finish()
         } else {
             viewModel = ViewModelProvider(this)[ExecutorHomeViewModel::class.java]
             setupRecyclerView()
             setupDateSelection()
-            updateTasksForSelectedDate()  // Теперь запрос отправляется после успешной установки userId
+            updateTasksForSelectedDate()
         }
 
         viewModel.tasks.observe(this, Observer { tasks ->
             tasksAdapter.updateTasks(tasks ?: emptyList())
         })
+
         setupViews()
         observeViewModel()
     }
 
     private fun setupViews() {
         findViewById<ImageView>(R.id.icon_chat).setOnClickListener {
-            fetchCoordinatorIdAndStartChat(userId)
+            fetchCoordinatorIdAndStartChat(authorizedId)
         }
-
-        setupRecyclerView()
-        setupDateSelection()
-        updateTasksForSelectedDate()
     }
 
     private fun observeViewModel() {
         viewModel.tasks.observe(this, Observer { tasks ->
             tasksAdapter.updateTasks(tasks ?: emptyList())
         })
-    }
-
-    fun navigateToChat(receiverId: Long) {
-        val intent = Intent(this, ChatActivity::class.java).apply {
-            putExtra("RECEIVER_ID", receiverId)
-        }
-        startActivity(intent)
     }
 
     private fun fetchCoordinatorIdAndStartChat(userId: Long) {
@@ -110,6 +103,7 @@ class ExecutorHomeActivity : AppCompatActivity() {
     private fun openChatActivity(coordinatorId: Long) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("RECEIVER_ID", coordinatorId)
+        intent.putExtra("USER_ID", authorizedId)
         startActivity(intent)
     }
 
@@ -153,7 +147,7 @@ class ExecutorHomeActivity : AppCompatActivity() {
             weekDaysContainer.addView(dayButton)
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-        calendar.time = selectedDate // Возвращаем календарь к выбранной дате
+        calendar.time = selectedDate
     }
 
     private fun changeWeek(weekOffset: Int) {
@@ -169,7 +163,10 @@ class ExecutorHomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Ошибка: ID пользователя не найден.", Toast.LENGTH_SHORT).show()
             return
         }
-        val formattedDate = formatter.format(selectedDate) // Форматируем дату
+        val formattedDate = formatter.format(selectedDate)
         viewModel.loadTasks(userId, formattedDate)
     }
 }
+
+
+

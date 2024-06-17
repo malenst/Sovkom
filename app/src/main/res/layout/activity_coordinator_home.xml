@@ -1,41 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#FFFFFF"
+    tools:context=".ui.home.CoordinatorHomeActivity">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="#c6c6c6"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:gravity="center_vertical">
 
-        <Button
-            android:id="@+id/btnNotifications"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Уведомления" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/icon_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_profile_b"
+                android:padding="8dp"/>
+            <ImageView
+                android:id="@+id/icon_notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notification_b"
+                android:padding="8dp"/>
+            <ImageView
+                android:id="@+id/icon_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chat_b"
+                android:padding="8dp"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-        <Button
-            android:id="@+id/btnChat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Чат" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/lvExecutors"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/executorsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="8dp"/>
 
-    <Button
-        android:id="@+id/btnAddTask"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Новая задача" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_task"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/colorAccent"
+        android:contentDescription="Add Task"
+        android:src="@drawable/ic_add_w"
+        android:tint="@android:color/white" />
 
-</LinearLayout>
+</RelativeLayout>

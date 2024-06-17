@@ -1,11 +1,13 @@
 package com.malenst.sovkom.ui.task
 
+import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.malenst.sovkom.R
 import com.malenst.sovkom.model.Task
+import com.malenst.sovkom.ui.map.TaskWithMapActivity
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -24,9 +26,8 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val outputFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     fun bind(task: Task) {
-        tvTaskDescription.text = task.description
+        tvTaskDescription.text = task.status
 
-        // Форматирование времени
         try {
             val parsedStartTime = inputFormatter.parse(task.startTime) ?: throw IllegalArgumentException("Invalid start time")
             val parsedEndTime = inputFormatter.parse(task.endTime) ?: throw IllegalArgumentException("Invalid end time")
@@ -40,15 +41,30 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Log.e("TaskViewHolder", "Error formatting time", e)
         }
 
-        // Асинхронный запуск для получения адреса
         Thread {
             val address = convertCoordinatesToAddress(task.destinationCoordinates)
             itemView.post {
-                tvTaskLocation.text = address
+                tvTaskLocation.text = address.replace(", Россия", "")
             }
         }.start()
-    }
 
+        itemView.setOnClickListener {
+            val context = itemView.context
+            val intent = Intent(context, TaskWithMapActivity::class.java).apply {
+                putExtra("TASK_ID", task.id)
+                putExtra("TASK_DESCRIPTION", task.description)
+                putExtra("TASK_START_TIME", task.startTime)
+                putExtra("TASK_END_TIME", task.endTime)
+                putExtra("TASK_NAME", task.status)
+                putExtra("TASK_DESTINATION", task.destinationCoordinates)
+                putExtra("TASK_DEPARTURE", task.departureCoordinates)
+                putExtra("TASK_DATE", task.assignmentDate)
+                putExtra("TASK_CATEGORY", task.category)
+            }
+            context.startActivity(intent)
+        }
+
+    }
 
     fun convertCoordinatesToAddress(coordinates: String): String {
         val parts = coordinates.split(",")
@@ -66,7 +82,7 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val url = URL(apiUrl)
             val urlConnection = url.openConnection() as HttpURLConnection
             urlConnection.requestMethod = "GET"
-            urlConnection.setRequestProperty("User-Agent", "MyApp") // Замените "MyApp" на название вашего приложения
+            urlConnection.setRequestProperty("User-Agent", "MyApp")
             urlConnection.connect()
 
             val statusCode = urlConnection.responseCode
@@ -75,7 +91,7 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 val response = inputStream.readText()
                 inputStream.close()
 
-                return parseAddressFromJson(response) // Реализуйте parseAddressFromJson
+                return parseAddressFromJson(response)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -88,5 +104,4 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val address = jsonObject.getJSONObject("address")
         return "${address.optString("road", "Unknown road")}, ${address.optString("city", "Unknown city")}, ${address.optString("country", "Unknown country")}"
     }
-
 }

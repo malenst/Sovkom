@@ -24,6 +24,6 @@ class SplashActivity : AppCompatActivity() {
         } else {
             startActivity(Intent(this, LoginActivity::class.java))
         }
-        finish() // Закрываем эту активность, чтобы пользователь не мог вернуться к ней
+        finish()
     }
 }

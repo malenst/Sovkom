@@ -14,5 +14,4 @@ class SessionManager(context: Context) {
         return prefs.getString("UserRole", null)
     }
 
-    // Добавьте здесь методы для сохранения и очистки учетных данных
 }
